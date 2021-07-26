@@ -16,4 +16,4 @@ Code that mines data from the youtube comments section from any playlist.
 + _storage_ is a folder to backup the data
 + .bat files are for quickly handling backup
 + _tests.py_ is for storing the tests.
-+ In order to use, it is almost required to read the code or open the data shelf using python to in what format the data is being stored.
++ In order to use, it is almost necessary to read the code or open the data shelf using python to understand in what format the data is being stored.
