@@ -253,4 +253,5 @@ async def main():
     #saving data
     dump.close()
     state.close()
-run(main())
+if __name__=='__main__':
+    run(main())
