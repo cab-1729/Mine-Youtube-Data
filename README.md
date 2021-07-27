@@ -2,7 +2,7 @@
 Code that mines data from the youtube comments section from any playlist.
 
 ##### A Data Mining Script
-![trump gif](https://github.com/cab-1729/Mine-Youtube-Data/blob/main/GIF.gif)
+![gif that is absolutely unnecessary](https://github.com/cab-1729/Mine-Youtube-Data/blob/main/GIF.gif)
 
 ### Note : This is not an application or a module to be downloaded and used. It is more like a blueprint to use for mining data. I created this for my use only, but it is public to view and anyone can use it if they can figure out how to.
 
