@@ -53,7 +53,7 @@ async def comment(comment_id,video_id,comment_text,author_name,author_id,author_
     def die():
         global comment_coroutines
         comment_coroutines+=1#release
-        state[video_id].append((comment_id,video_id,comment_text,author_name,author_id,author_profile_image,likes,commented_at,has_replies,nT))
+        state[video_id].append((comment_id,video_id,comment_text,author_name,author_id,author_profile_image,likes,commented_at,reply_count,nT))
         return False
     global comment_coroutines,reply_coroutines,quota_exhausted
     need_comment=False
