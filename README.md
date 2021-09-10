@@ -17,3 +17,4 @@ Code that mines data from the youtube comments section from any playlist.
 + .bat files are for quickly handling backup
 + _tests.py_ is for storing the tests.
 + In order to use, it is almost necessary to read the code or open the data shelf using python to understand in what format the data is being stored.
++ All the filtering is done natively, so filtering code is completely private. This goes through all the available comments from the playlist, so Youtube servers only get the API key, IP, and playlist id.
