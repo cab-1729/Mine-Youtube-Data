@@ -6,7 +6,7 @@ Code that mines data from the youtube comments section from any playlist.
 
 ### Note : This is not an application or a module to be downloaded and used. It is more like a blueprint to use for mining data. I created this for my use only, but it is public to view and anyone can use it if they can figure out how to.
 
-+ This uses the Youtube Data Api. Data must be collected over the course of days, since the youtube data api has a daily quota. _get_data.py_ is to be run each day with renewed quota until all data has been collected. The key given will be used to exhaustion on any particular day
++ This uses the Youtube Data Api. Data must be collected over the course of days, since the youtube data api has a daily quota. _get_data.py_ is to be run each day with renewed quota until all data has been collected. The key given will be used to exhaustion on any particular day. **Do not change the key and run before cleaning the state. This may result in key getting banned from Youtube.**
 + For reference, _quota exhausted.json_ contains the response given by youtube when the quota has been used and _comments disabled.json_ contains the response given by youtube when the comments for a video are disabled.
 + _get_data.py_ does the actual data mining, _cab_1729.py_ contains all details for what to mine.
 + _to_json.py_ converts the data to a more human readable format. **It does not however convert all the data, images are also stored in the data files. Images are not converted to json.**
