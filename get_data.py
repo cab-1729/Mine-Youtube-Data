@@ -19,7 +19,6 @@ incomplete_video_ids=[]
 quota_exhausted=False
 state=open('state',writeback=True)
     #colors
-init(convert=True)
 getting_videos=Fore.LIGHTYELLOW_EX
 getting_comments=Fore.LIGHTGREEN_EX
 got_comments=Back.GREEN+Fore.WHITE
