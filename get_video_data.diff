@@ -1,0 +1,126 @@
+6c6
+< from cab_1729 import api_key,video_id,need_data
+---
+> from cab_1729 import api_key,playlist_id,need_data
+15c15
+< dump=open(video_id)
+---
+> dump=open(playlist_id)
+100a101
+>                     'video':video_id,
+111,112c112
+< async def video(video_id,not_saved,nT):#goes through comments
+<     global comment_coroutines,quota_exhausted
+---
+> async def video(video_id,video_title,released_at,nT,not_saved,coroutines):#goes through comments
+114c114,122
+<         await store(state,video_id,nT)
+---
+>         need_video=True in await gather(*coroutines)
+>         if need_video and not_saved:
+>             await get_picture(internet,f'https://i.ytimg.com/vi/{video_id}/sddefault.jpg',f'thumbnail of {video_id}',True)
+>             await store(dump,video_id,{'title':video_title,'publish time':released_at})
+>         global video_coroutines
+>         video_coroutines+=1#release
+>         incomplete_video_ids.append((video_id,video_title,released_at,nT,not need_video))
+>     global comment_coroutines,video_coroutines,quota_exhausted
+>     await store(state,video_id,[])
+158c166,189
+<         if not_saved:#if all comments gone through and video needed
+---
+>         need_video=True in results
+>         if False in results:#if not all comments gone through
+>             completed_video_ids.append((video_id,video_title,released_at,not need_video))
+>             if need_video and not_saved:
+>                 await get_picture(internet,f'https://i.ytimg.com/vi/{video_id}/sddefault.jpg',f'thumbnail of {video_id}',True)
+>                 await store(dump,video_id,{'title':video_title,'publish time':released_at})
+>         elif need_video and not_saved:#if all comments gone through and video needed
+>             await get_picture(internet,f'https://i.ytimg.com/vi/{video_id}/sddefault.jpg',f'thumbnail of {video_id}',True)
+>             del state[video_id]#remove list from file
+>             await store(dump,video_id,{'title':video_title,'publish time':released_at})
+>         else:#if not needed
+>             del state[video_id]#remove list from file
+>     video_coroutines+=1#release
+> async def video_complete(video_id,video_title,released_at,not_saved):#collects rest of comments
+>     global comment_coroutines
+>     coroutines=[]
+>     for args in state[video_id]:
+>         comment_coroutines-=1#lock
+>         coroutines.append(create_task(comment(*args)))
+>     results=await gather(*coroutines)
+>     async with ClientSession() as internet:
+>         if False in results:#if not determined:
+>             completed_video_ids.append((video_id,video_title,released_at))
+>         if True in results and not_saved:#if video needed
+159a191,226
+>             await store(dump,video_id,{'title':video_title,'publish time':released_at})
+> async def playlist(nT):#goes through videos
+>     async def die():
+>         await gather(*coroutines)
+>         await store(state,playlist_id,nT)
+>     global video_coroutines,quota_exhausted
+>     req=f'https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId={playlist_id}&key={api_key}&pageToken='
+>     beg=f'{getting_videos}Getting some videos of {playlist_id} ...';end=f'{getting_videos}Got some videos of {playlist_id}'
+>     coroutines=[]
+>     async with ClientSession() as internet:
+>         while True:#vids request
+>             if quota_exhausted:
+>                 return await die()
+>             print(beg)
+>             async with internet.get(req+nT) as resp:
+>                 if resp.status==403:
+>                     quota_exhausted=True
+>                     print(f'{special_message}\nQuota exhausted\nSaving state and quiting\n')
+>                     return await die()
+>                 data=await resp.json()
+>                 for video_data in data['items']:
+>                     snippet=video_data['snippet']
+>                     while video_coroutines==0:await sleep(5.0)#wait if too many
+>                     video_coroutines-=1#lock
+>                     coroutines.append(create_task(video(
+>                         snippet['resourceId']['videoId'],
+>                         snippet['title'],
+>                         snippet['publishedAt'],
+>                         '',True,[]
+>                     )))
+>             print(end)
+>             try:nT=data['nextPageToken']#go to next page
+>             except KeyError:
+>                 print(Fore.WHITE+Back.YELLOW+f'Got all videos of {playlist_id}{back2black}')
+>                 break#no more videos
+>     await gather(*coroutines)
+161,162c228
+<     not_saved=True
+<     video_token=''
+---
+>     playlist_token=''
+164c230
+<         global pictures_obtained
+---
+>         global video_coroutines,pictures_obtained
+166,167c232,244
+<         video_token=state[video_id]
+<         not_saved=False
+---
+>         coroutines=[]
+>         for i in state['completed video ids']:
+>             coroutines.append(create_task(video_complete(*i)))
+>         for i in state['incomplete video ids']:
+>             video_coroutines-=1#lock
+>             coroutines.append(create_task(video(
+>                 *i,
+>                 [create_task(comment(*args))
+>                     for args in state[i[0]]
+>                 ]
+>             )))
+>         await gather(*coroutines)
+>         playlist_token=state[playlist_id]
+168a246,247
+>     await store(state,'completed video ids',completed_video_ids)
+>     await store(state,'incomplete video ids',incomplete_video_ids)
+170c249
+<     await video(video_id,not_saved,video_token)
+---
+>     await playlist(playlist_token)
+176d254
+< coroutines=[]
