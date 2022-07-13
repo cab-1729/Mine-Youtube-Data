@@ -1,6 +1,6 @@
 #imports
 from shelve import open
-from colorama import Fore,Back,init
+from colorama import Fore,Back,Style,init
 from asyncio import run,create_task,gather,sleep
 from aiohttp import ClientSession
 from cab_1729 import api_key,playlist_id,need_data
@@ -26,7 +26,7 @@ getting_replies=Fore.LIGHTBLUE_EX
 got_replies=Back.BLUE+Fore.WHITE
 getting_picture=Fore.LIGHTCYAN_EX
 got_picture=Back.CYAN+Fore.WHITE
-back2black=Back.BLACK
+back2black=Style.RESET_ALL
 special_message=Fore.LIGHTRED_EX
 #functions
 async def store(shelve_name,key,data):
