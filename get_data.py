@@ -1,4 +1,3 @@
-#!/bin/python3
 #imports
 from shelve import open
 from colorama import Fore,Back,Style,init
