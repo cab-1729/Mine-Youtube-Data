@@ -185,7 +185,7 @@ async def video_complete(video_id,video_title,released_at,not_saved):#collects r
     results=await gather(*coroutines)
     async with ClientSession() as internet:
         if False in results:#if not determined:
-            completed_video_ids.append((video_id,video_title,released_at))
+            completed_video_ids.append((video_id,video_title,released_at,not_saved))
         if True in results and not_saved:#if video needed
             await get_picture(internet,f'https://i.ytimg.com/vi/{video_id}/sddefault.jpg',f'thumbnail of {video_id}',True)
             await store(dump,video_id,{'title':video_title,'publish time':released_at})
